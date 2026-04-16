@@ -3,10 +3,11 @@ package com.unblu.tests
 import org.slf4j.LoggerFactory
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
+import software.amazon.awssdk.core.checksums.RequestChecksumCalculation
+import software.amazon.awssdk.core.checksums.ResponseChecksumValidation
 import software.amazon.awssdk.core.sync.RequestBody
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.s3.S3Client
-import software.amazon.awssdk.services.s3.S3Configuration
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import software.amazon.awssdk.services.s3.model.S3Exception
 import java.net.URI
@@ -26,8 +27,8 @@ fun main() {
         .endpointOverride(URI.create(endpoint))
         .region(Region.of("eu-ch2"))
         .credentialsProvider(StaticCredentialsProvider.create(credentials))
-        // activate to disable chunked encoding
-        //.serviceConfiguration(S3Configuration.builder().chunkedEncodingEnabled(false).build())
+        .requestChecksumCalculation(RequestChecksumCalculation.WHEN_REQUIRED)
+        .responseChecksumValidation(ResponseChecksumValidation.WHEN_REQUIRED)
         .build()
 
     val content = "Hello from obs-s3-auth sample upload!"
